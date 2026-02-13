@@ -24,14 +24,15 @@
 
     <!-- Optimization: Load Fonts directly with display swap -->
 
-    <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Optimization: Inlined CSS to prevent render blocking -->
     <style>
         body {
-            font-family: 'Titan One', cursive;
+            font-family: 'Noto Sans', sans-serif;
             touch-action: none;
             /* Prevent Pull-to-refresh on mobile */
             -webkit-user-select: none;
@@ -322,14 +323,16 @@
             <!-- TUG OF WAR -->
             <g transform="translate(300, 120)">
                 <!-- Shadow/Stroke Layer -->
-                <text x="0" y="0" text-anchor="middle" font-family="'Titan One', cursive" font-size="80" fill="none"
-                    stroke="black" stroke-width="12" stroke-linejoin="round" transform="scale(1, 1)">TUG OF WAR</text>
+                <text x="0" y="0" text-anchor="middle" font-family="'Noto Sans', sans-serif" font-weight="900"
+                    font-size="80" fill="none" stroke="black" stroke-width="12" stroke-linejoin="round"
+                    transform="scale(1, 1)">TUG OF WAR</text>
                 <!-- Main Text Layer -->
-                <text x="0" y="0" text-anchor="middle" font-family="'Titan One', cursive" font-size="80"
-                    fill="url(#textGradient)" filter="url(#hardShadow)" transform="scale(1, 1)">TUG OF WAR</text>
+                <text x="0" y="0" text-anchor="middle" font-family="'Noto Sans', sans-serif" font-weight="900"
+                    font-size="80" fill="url(#textGradient)" filter="url(#hardShadow)" transform="scale(1, 1)">TUG OF
+                    WAR</text>
                 <!-- Internal Highlight -->
-                <text x="0" y="0" text-anchor="middle" font-family="'Titan One', cursive" font-size="80"
-                    fill="url(#textGradient)" stroke="white" stroke-width="2" stroke-opacity="0.5"
+                <text x="0" y="0" text-anchor="middle" font-family="'Noto Sans', sans-serif" font-weight="900"
+                    font-size="80" fill="url(#textGradient)" stroke="white" stroke-width="2" stroke-opacity="0.5"
                     transform="scale(1, 1)">TUG OF WAR</text>
             </g>
 
@@ -338,12 +341,13 @@
                 <!-- Backing Shape (Optional, maybe just text) -->
 
                 <!-- Shadow/Stroke -->
-                <text x="0" y="0" text-anchor="middle" font-family="'Titan One', cursive" font-size="110" fill="none"
-                    stroke="black" stroke-width="16" stroke-linejoin="round"
+                <text x="0" y="0" text-anchor="middle" font-family="'Noto Sans', sans-serif" font-weight="900"
+                    font-size="110" fill="none" stroke="black" stroke-width="16" stroke-linejoin="round"
                     style="letter-spacing: 0.1em;">BATTLE</text>
                 <!-- Main Fill -->
-                <text x="0" y="0" text-anchor="middle" font-family="'Titan One', cursive" font-size="110"
-                    fill="url(#battleGradient)" filter="url(#hardShadow)" style="letter-spacing: 0.1em;">BATTLE</text>
+                <text x="0" y="0" text-anchor="middle" font-family="'Noto Sans', sans-serif" font-weight="900"
+                    font-size="110" fill="url(#battleGradient)" filter="url(#hardShadow)"
+                    style="letter-spacing: 0.1em;">BATTLE</text>
                 <!-- Cracks/Texture could go here -->
                 <path d="M150,-20 L180,10 M-150,-20 L-120,10" stroke="black" stroke-width="5" opacity="0.3" />
             </g>
@@ -361,7 +365,7 @@
             START GAME
         </button>
         <p class="mt-8 text-xl text-yellow-800 font-bold">2 Players • Local Multiplayer</p>
-        <div class="absolute bottom-4 right-4 font-bold text-sm">v.1.0.0</div>
+        <div class="absolute bottom-4 right-4 text-white text-light text-sm">v.1.0.0 | @alphokung</div>
     </div>
 
     <!-- Countdown Overlay -->
