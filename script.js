@@ -7,7 +7,7 @@ const CONFIG = {
 };
 
 const gameState = {
-    status: 'start', // start, playing, end
+    status: 'start', // start, countdown, playing, end
     ropePosition: 50, // 0 to 100, 50 is center
     p1: {
         currentProblem: {},
@@ -22,9 +22,11 @@ const gameState = {
 const screens = {
     start: document.getElementById('start-screen'),
     game: document.getElementById('game-container'),
-    winner: document.getElementById('winner-overlay')
+    winner: document.getElementById('winner-overlay'),
+    countdown: document.getElementById('countdown-overlay')
 };
 
+const countdownText = document.getElementById('countdown-text');
 const ropeSystem = document.getElementById('rope-system');
 const p1Char = document.getElementById('p1-char');
 const p2Char = document.getElementById('p2-char');
@@ -35,6 +37,16 @@ let audioCtx;
 
 function initAudio() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function speak(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.2; // Slightly faster
+        utterance.pitch = 1.2; // Slightly higher pitch
+        utterance.volume = 1.0;
+        window.speechSynthesis.speak(utterance);
+    }
 }
 
 function playCheer() {
@@ -87,6 +99,7 @@ function playVictorySound() {
         osc.stop(t + times[i] + durations[i]);
     });
 }
+
 
 // Fireworks System
 const canvas = document.getElementById('fireworks');
@@ -224,7 +237,7 @@ function stopFireworks() {
 
 document.getElementById('start-btn').addEventListener('click', () => {
     initAudio();
-    startGame();
+    startCountdown();
 });
 
 const restartBtn = document.getElementById('restart-btn');
@@ -232,6 +245,41 @@ if (restartBtn) {
     restartBtn.addEventListener('click', () => {
         resetGame();
     });
+}
+
+function startCountdown() {
+    gameState.status = 'countdown';
+    screens.start.classList.add('hidden');
+    screens.game.classList.remove('hidden');
+    screens.countdown.classList.remove('hidden');
+
+    let count = 3;
+
+    function updateCount() {
+        if (count > 0) {
+            countdownText.textContent = count;
+            countdownText.classList.remove('scale-100');
+            void countdownText.offsetWidth; // Trigger reflow
+            countdownText.classList.add('scale-150');
+
+            speak(count.toString());
+
+            setTimeout(() => {
+                count--;
+                updateCount();
+            }, 1000);
+        } else {
+            countdownText.textContent = "FIGHT!";
+            speak("Fight!");
+
+            setTimeout(() => {
+                screens.countdown.classList.add('hidden');
+                startGame();
+            }, 1000);
+        }
+    }
+
+    updateCount();
 }
 
 function startGame() {
@@ -264,7 +312,10 @@ function startGame() {
 }
 
 function resetGame() {
-    startGame();
+    // screens.game.classList.add('hidden'); // Optional: Hide game to show start screen?
+    // For now, instant restart
+    screens.winner.classList.add('hidden');
+    startCountdown(); // Go back to countdown
 }
 
 function generateProblem(player) {
@@ -299,10 +350,13 @@ function renderProblem(player) {
     pData.currentProblem.options.forEach(opt => {
         const btn = document.createElement('button');
         const isP1 = player === 'p1';
-        // Base classes updated for responsiveness
-        const colorClasses = isP1 ? 'border-blue-300 text-blue-800' : 'border-red-300 text-red-800';
+        // Updated Button Styles for Theme
+        const colorClasses = isP1
+            ? 'bg-blue-100 border-blue-400 text-blue-900 hover:bg-blue-200'
+            : 'bg-red-100 border-red-400 text-red-900 hover:bg-red-200';
+
         // Use standard classes, sizing will be handled by container grid
-        btn.className = `bg-white border-b-4 ${colorClasses} rounded-xl text-2xl md:text-3xl lg:text-4xl font-bold active:translate-y-1 active:border-b-0 shadow-sm transition-all duration-100 w-full h-full flex items-center justify-center`;
+        btn.className = `${colorClasses} border-b-4 rounded-xl text-3xl md:text-4xl lg:text-5xl font-bold active:translate-y-1 active:border-b-0 shadow-md transition-all duration-100 w-full h-full flex items-center justify-center`;
 
         btn.textContent = opt;
         btn.onclick = () => handleAnswer(player, opt, btn);
@@ -331,7 +385,9 @@ function handleAnswer(player, answer, btnElement) {
         }
 
         // Visual feedback
-        btnElement.classList.add('bg-green-500', 'text-white', 'border-green-700');
+        btnElement.classList.replace('bg-blue-100', 'bg-green-500');
+        btnElement.classList.replace('bg-red-100', 'bg-green-500');
+        btnElement.classList.add('text-white', 'border-green-700');
 
         // Screen Shake for Impact
         screens.game.classList.add('shake');
@@ -347,7 +403,9 @@ function handleAnswer(player, answer, btnElement) {
         }
 
         // Visual feedback
-        btnElement.classList.add('bg-red-500', 'text-white', 'border-red-700', 'shake');
+        btnElement.classList.replace('bg-blue-100', 'bg-red-500');
+        btnElement.classList.replace('bg-red-100', 'bg-red-500');
+        btnElement.classList.add('text-white', 'border-red-700', 'shake');
 
         // Haptic (if supported)
         if (navigator.vibrate) navigator.vibrate(200);
@@ -413,7 +471,7 @@ function endGame(winner) {
         // Text Update
         const winTextEl = document.getElementById('winner-text');
         winTextEl.textContent = winner === 'p1' ? 'BLUE WINS!' : 'RED WINS!';
-        winTextEl.className = `text-5xl md:text-7xl font-black mb-2 mt-4 drop-shadow-md ${winner === 'p1' ? 'text-blue-500' : 'text-red-500'}`;
+        winTextEl.className = `text-5xl md:text-7xl font-bold mb-2 mt-4 drop-shadow-md ${winner === 'p1' ? 'text-blue-500' : 'text-red-500'}`;
 
         // Show Overlay
         screens.winner.classList.remove('hidden');
@@ -463,10 +521,12 @@ function updateVisuals() {
     ropeSystem.style.transform = `translateX(${translatePct}%)`;
 
     // Losing Face Logic
-    if (gameState.ropePosition > 75) {
+    if (gameState.ropePosition > 70) {
+        // P1 losing bad
         p1Char.classList.add('shake');
         p2Char.classList.remove('shake');
-    } else if (gameState.ropePosition < 25) {
+    } else if (gameState.ropePosition < 30) {
+        // P2 losing bad
         p2Char.classList.add('shake');
         p1Char.classList.remove('shake');
     } else {

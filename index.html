@@ -23,15 +23,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- Optimization: Load Fonts directly with display swap -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Optimization: Inlined CSS to prevent render blocking -->
     <style>
         body {
-            font-family: 'Fredoka', sans-serif;
+            font-family: 'Titan One', cursive;
             touch-action: none;
             /* Prevent Pull-to-refresh on mobile */
             -webkit-user-select: none;
@@ -106,16 +106,18 @@
     </script>
 </head>
 
-<body class="bg-gray-100 overflow-hidden touch-none select-none">
+<body class="bg-yellow-50 overflow-hidden touch-none select-none">
     <!-- Main Game Container -->
     <div id="game-container" class="relative w-screen h-screen flex flex-col hidden">
 
         <!-- Battle Arena (Top 50%) -->
-        <div class="flex-1 relative flex items-center justify-center overflow-hidden" id="battle-arena">
+        <div class="flex-1 relative flex items-center justify-center overflow-hidden border-b-8 border-orange-500"
+            id="battle-arena">
             <!-- Stadium Background -->
             <div class="absolute inset-0 z-0 flex flex-col">
                 <!-- Crowd / Stands -->
-                <div class="h-1/3 bg-gray-800 flex items-end justify-center overflow-hidden relative">
+                <div
+                    class="h-1/3 bg-gray-800 flex items-end justify-center overflow-hidden relative border-b-4 border-yellow-600">
                     <!-- Crowd Rows -->
                     <div class="absolute inset-0 opacity-30"
                         style="background-image: radial-gradient(circle, white 2px, transparent 2.5px); background-size: 10px 10px;">
@@ -230,10 +232,10 @@
         </div>
 
         <!-- Controls Area (Bottom 50%) -->
-        <div class="flex-1 flex border-t-4 md:border-t-8 border-gray-300">
+        <div class="flex-1 flex bg-orange-100">
             <!-- Player 1 Controls -->
             <div
-                class="flex-1 bg-blue-50 flex flex-col p-2 md:p-4 border-r-2 md:border-r-4 border-gray-300 relative overflow-visible">
+                class="flex-1 bg-white/50 flex flex-col p-2 md:p-4 border-r-4 border-yellow-500 relative overflow-visible">
                 <!-- P1 Power Bar (Street Fighter Style) -->
                 <div class="absolute top-[-2rem] left-2 w-3/4 md:w-1/2 z-30">
                     <div
@@ -250,7 +252,8 @@
 
                 <div class="h-1/3 flex items-center justify-center mt-6">
                     <div id="p1-problem"
-                        class="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-800 tracking-wider">? + ?</div>
+                        class="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-800 tracking-wider drop-shadow-sm">?
+                        + ?</div>
                 </div>
 
                 <div id="p1-options" class="flex-1 grid grid-cols-1 gap-2 pb-2">
@@ -260,7 +263,7 @@
 
             <!-- Player 2 Controls -->
             <div
-                class="flex-1 bg-red-50 flex flex-col p-2 md:p-4 border-l-2 md:border-l-4 border-gray-300 relative overflow-visible">
+                class="flex-1 bg-white/50 flex flex-col p-2 md:p-4 border-l-4 border-yellow-500 relative overflow-visible">
                 <!-- P2 Power Bar (Street Fighter Style) -->
                 <div class="absolute top-[-2rem] right-2 w-3/4 md:w-1/2 z-30 flex flex-col items-end">
                     <div
@@ -277,7 +280,8 @@
 
                 <div class="h-1/3 flex items-center justify-center mt-6">
                     <div id="p2-problem"
-                        class="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-800 tracking-wider">? + ?</div>
+                        class="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-800 tracking-wider drop-shadow-sm">?
+                        + ?</div>
                 </div>
 
                 <div id="p2-options" class="flex-1 grid grid-cols-1 gap-2 pb-2">
@@ -318,16 +322,14 @@
             <!-- TUG OF WAR -->
             <g transform="translate(300, 120)">
                 <!-- Shadow/Stroke Layer -->
-                <text x="0" y="0" text-anchor="middle" font-family="'Fredoka', sans-serif" font-weight="900"
-                    font-size="80" fill="none" stroke="black" stroke-width="12" stroke-linejoin="round"
-                    transform="scale(1, 1)">TUG OF WAR</text>
+                <text x="0" y="0" text-anchor="middle" font-family="'Titan One', cursive" font-size="80" fill="none"
+                    stroke="black" stroke-width="12" stroke-linejoin="round" transform="scale(1, 1)">TUG OF WAR</text>
                 <!-- Main Text Layer -->
-                <text x="0" y="0" text-anchor="middle" font-family="'Fredoka', sans-serif" font-weight="900"
-                    font-size="80" fill="url(#textGradient)" filter="url(#hardShadow)" transform="scale(1, 1)">TUG OF
-                    WAR</text>
+                <text x="0" y="0" text-anchor="middle" font-family="'Titan One', cursive" font-size="80"
+                    fill="url(#textGradient)" filter="url(#hardShadow)" transform="scale(1, 1)">TUG OF WAR</text>
                 <!-- Internal Highlight -->
-                <text x="0" y="0" text-anchor="middle" font-family="'Fredoka', sans-serif" font-weight="900"
-                    font-size="80" fill="url(#textGradient)" stroke="white" stroke-width="2" stroke-opacity="0.5"
+                <text x="0" y="0" text-anchor="middle" font-family="'Titan One', cursive" font-size="80"
+                    fill="url(#textGradient)" stroke="white" stroke-width="2" stroke-opacity="0.5"
                     transform="scale(1, 1)">TUG OF WAR</text>
             </g>
 
@@ -336,13 +338,12 @@
                 <!-- Backing Shape (Optional, maybe just text) -->
 
                 <!-- Shadow/Stroke -->
-                <text x="0" y="0" text-anchor="middle" font-family="'Fredoka', sans-serif" font-weight="900"
-                    font-size="110" fill="none" stroke="black" stroke-width="16" stroke-linejoin="round"
+                <text x="0" y="0" text-anchor="middle" font-family="'Titan One', cursive" font-size="110" fill="none"
+                    stroke="black" stroke-width="16" stroke-linejoin="round"
                     style="letter-spacing: 0.1em;">BATTLE</text>
                 <!-- Main Fill -->
-                <text x="0" y="0" text-anchor="middle" font-family="'Fredoka', sans-serif" font-weight="900"
-                    font-size="110" fill="url(#battleGradient)" filter="url(#hardShadow)"
-                    style="letter-spacing: 0.1em;">BATTLE</text>
+                <text x="0" y="0" text-anchor="middle" font-family="'Titan One', cursive" font-size="110"
+                    fill="url(#battleGradient)" filter="url(#hardShadow)" style="letter-spacing: 0.1em;">BATTLE</text>
                 <!-- Cracks/Texture could go here -->
                 <path d="M150,-20 L180,10 M-150,-20 L-120,10" stroke="black" stroke-width="5" opacity="0.3" />
             </g>
@@ -361,6 +362,16 @@
         </button>
         <p class="mt-8 text-xl text-yellow-800 font-bold">2 Players • Local Multiplayer</p>
         <div class="absolute bottom-4 right-4 font-bold text-sm">v.1.0.0</div>
+    </div>
+
+    <!-- Countdown Overlay -->
+    <div id="countdown-overlay"
+        class="fixed inset-0 bg-yellow-400/90 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div id="countdown-text"
+            class="text-9xl font-black text-white drop-shadow-2xl stroke-black scale-150 transition-transform duration-200"
+            style="-webkit-text-stroke: 4px black;">
+            3
+        </div>
     </div>
 
     <!-- Winner Overlay (Dialog Style) -->
