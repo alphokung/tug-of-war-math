@@ -37,6 +37,11 @@
 
     <!-- Optimization: Inlined CSS to prevent render blocking -->
     <style>
+        .rotate-icon:hover {
+            transform: rotate(90deg);
+            transition: transform 0.3s ease-in-out;
+        }
+
         body {
             font-family: 'Noto Sans', sans-serif;
             touch-action: none;
@@ -111,18 +116,23 @@
             }
         }
     </script>
+
+
 </head>
 
 <body class="bg-yellow-50 overflow-hidden touch-none select-none">
     <!-- Portrait Mode Warning Overlay -->
     <div id="rotate-overlay"
         class="fixed inset-0 bg-yellow-400 z-[60] flex flex-col items-center justify-center p-8 text-center hidden portrait:flex">
+
+
         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="text-red-600 animate-pulse mb-4">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12"></path>
-            <path d="M3 3v9h9"></path>
+            class="rotate-icon" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.85.83 6.72 2.24" />
+            <polyline points="21 3 21 9 15 9" />
         </svg>
+
+
         <h2 class="text-3xl font-black text-red-600 mb-2 uppercase tracking-widest"
             style="-webkit-text-stroke: 1px black;">Rotate Device</h2>
         <p class="text-xl text-yellow-900 font-bold">This battle requires LANDSCAPE mode!</p>
@@ -134,16 +144,18 @@
 
         <!-- Audio Control Button (Absolute Top Center of Screen) -->
         <button id="audio-btn"
-            class="fixed top-4 left-1/2 -translate-x-1/2 z-[999] bg-white/80 p-3 rounded-full shadow-lg border-2 border-yellow-500 hover:bg-yellow-100 transition-transform hover:scale-110 active:scale-95">
+            class="fixed top-2 md:top-4 left-1/2 -translate-x-1/2 z-[999] bg-white/80 p-2 md:p-3 rounded-full shadow-lg border-2 border-yellow-500 hover:bg-yellow-100 transition-transform hover:scale-110 active:scale-95">
             <!-- Icon: Sound On -->
-            <svg id="icon-sound-on" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-600 block">
+            <svg id="icon-sound-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="text-orange-600 block w-5 h-5 md:w-6 md:h-6">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                 <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
             </svg>
             <!-- Icon: Mute -->
-            <svg id="icon-sound-off" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500 hidden">
+            <svg id="icon-sound-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="text-gray-500 hidden w-5 h-5 md:w-6 md:h-6">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                 <line x1="23" y1="9" x2="17" y2="15"></line>
                 <line x1="17" y1="9" x2="23" y2="15"></line>
