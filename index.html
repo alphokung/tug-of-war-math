@@ -12,6 +12,8 @@
     <meta property="og:title" content="Math Tug-of-War Battle" />
     <meta property="og:description"
         content="A real-time local multiplayer math battle! Pull the rope by solving math problems faster than your opponent." />
+    <meta property="og:alt"
+        content="A real-time local multiplayer math battle! Pull the rope by solving math problems faster than your opponent." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="assets/og.webp" />
     <meta property="og:url" content="https://tug-of-war-math.pages.dev/" />
@@ -287,13 +289,78 @@
 
     <!-- Start Screen -->
     <div id="start-screen" class="fixed inset-0 bg-yellow-400 flex flex-col items-center justify-center z-50">
-        <h1 class="text-6xl font-bold text-white drop-shadow-md mb-8 stroke-black"
-            style="-webkit-text-stroke: 2px black;">TUG OF WAR<br>BATTLE</h1>
+        <!-- Exciting SVG Logo -->
+        <svg width="600" height="300" viewBox="0 0 600 300"
+            class="mb-8 drop-shadow-2xl hover:scale-105 transition-transform duration-300">
+            <defs>
+                <!-- Gradients -->
+                <linearGradient id="textGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" /> <!-- Gold -->
+                    <stop offset="50%" style="stop-color:#FF8C00;stop-opacity:1" /> <!-- Dark Orange -->
+                    <stop offset="100%" style="stop-color:#FF4500;stop-opacity:1" /> <!-- Red Orange -->
+                </linearGradient>
+                <linearGradient id="battleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" /> <!-- Red -->
+                    <stop offset="50%" style="stop-color:#b91c1c;stop-opacity:1" /> <!-- Dark Red -->
+                    <stop offset="100%" style="stop-color:#7f1d1d;stop-opacity:1" /> <!-- Very Dark Red -->
+                </linearGradient>
+
+                <!-- Filters for 3D/Glow effect -->
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+                <filter id="hardShadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="4" dy="4" stdDeviation="0" flood-color="black" flood-opacity="1" />
+                </filter>
+            </defs>
+
+            <!-- TUG OF WAR -->
+            <g transform="translate(300, 120)">
+                <!-- Shadow/Stroke Layer -->
+                <text x="0" y="0" text-anchor="middle" font-family="'Fredoka', sans-serif" font-weight="900"
+                    font-size="80" fill="none" stroke="black" stroke-width="12" stroke-linejoin="round"
+                    transform="scale(1, 1)">TUG OF WAR</text>
+                <!-- Main Text Layer -->
+                <text x="0" y="0" text-anchor="middle" font-family="'Fredoka', sans-serif" font-weight="900"
+                    font-size="80" fill="url(#textGradient)" filter="url(#hardShadow)" transform="scale(1, 1)">TUG OF
+                    WAR</text>
+                <!-- Internal Highlight -->
+                <text x="0" y="0" text-anchor="middle" font-family="'Fredoka', sans-serif" font-weight="900"
+                    font-size="80" fill="url(#textGradient)" stroke="white" stroke-width="2" stroke-opacity="0.5"
+                    transform="scale(1, 1)">TUG OF WAR</text>
+            </g>
+
+            <!-- BATTLE (Heavier, blockier) -->
+            <g transform="translate(300, 240)">
+                <!-- Backing Shape (Optional, maybe just text) -->
+
+                <!-- Shadow/Stroke -->
+                <text x="0" y="0" text-anchor="middle" font-family="'Fredoka', sans-serif" font-weight="900"
+                    font-size="110" fill="none" stroke="black" stroke-width="16" stroke-linejoin="round"
+                    style="letter-spacing: 0.1em;">BATTLE</text>
+                <!-- Main Fill -->
+                <text x="0" y="0" text-anchor="middle" font-family="'Fredoka', sans-serif" font-weight="900"
+                    font-size="110" fill="url(#battleGradient)" filter="url(#hardShadow)"
+                    style="letter-spacing: 0.1em;">BATTLE</text>
+                <!-- Cracks/Texture could go here -->
+                <path d="M150,-20 L180,10 M-150,-20 L-120,10" stroke="black" stroke-width="5" opacity="0.3" />
+            </g>
+
+            <!-- Dynamic Elements (Sparks/Stars) -->
+            <g fill="#FFD700" filter="url(#glow)">
+                <circle cx="50" cy="50" r="5" class="animate-pulse" />
+                <circle cx="550" cy="50" r="8" class="animate-pulse" style="animation-duration: 1.5s" />
+                <circle cx="20" cy="200" r="6" class="animate-pulse" style="animation-duration: 0.8s" />
+                <circle cx="580" cy="220" r="4" class="animate-pulse" style="animation-duration: 1.2s" />
+            </g>
+        </svg>
         <button id="start-btn"
-            class="bg-green-500 hover:bg-green-600 text-white text-4xl font-bold py-6 px-12 rounded-2xl border-b-8 border-green-700 active:translate-y-2 active:border-b-0 shadow-xl transition-all">
+            class="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white text-4xl font-bold py-6 px-12 rounded-2xl border-b-8 border-red-800 active:translate-y-2 active:border-b-0 shadow-xl transition-all transform hover:scale-105">
             START GAME
         </button>
         <p class="mt-8 text-xl text-yellow-800 font-bold">2 Players • Local Multiplayer</p>
+        <div class="absolute bottom-4 right-4 font-bold text-sm">v.1.0.0</div>
     </div>
 
     <!-- Winner Overlay (Dialog Style) -->
