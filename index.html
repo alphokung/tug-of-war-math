@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Math Tug-of-War Battle</title>
 
     <!-- SEO & Open Graph -->
@@ -14,10 +14,66 @@
         content="A real-time local multiplayer math battle! Pull the rope by solving math problems faster than your opponent." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="assets/og.webp" />
-    <meta property="og:url" content="https://example.com" />
+    <meta property="og:url" content="https://tug-of-war-math.pages.dev/" />
+
+    <!-- Optimization: Preconnect to Font Origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Optimization: Load Fonts directly with display swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
+
+    <!-- Optimization: Inlined CSS to prevent render blocking -->
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            touch-action: none;
+            /* Prevent Pull-to-refresh on mobile */
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Custom Shake Animation Class */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+        }
+
+        /* Character Idle/Pull Motion */
+        .heave {
+            animation: heaveHo 1s infinite alternate ease-in-out;
+        }
+
+        /* Lightning Flash */
+        .flash-effect {
+            animation: flash 0.3s ease-out;
+        }
+
+        @keyframes flash {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) translateY(-50%);
+            }
+
+            20% {
+                opacity: 1;
+                transform: scale(1.2) translateY(-50%);
+            }
+
+            40% {
+                opacity: 1;
+                transform: scale(1) translateY(-50%);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.5) translateY(-50%);
+            }
+        }
+    </style>
+
     <script>
         tailwind.config = {
             theme: {
@@ -192,7 +248,7 @@
 
                 <div class="h-1/3 flex items-center justify-center mt-6">
                     <div id="p1-problem"
-                        class="text-4xl md:text-5xl lg:text-7xl font-black text-gray-800 tracking-wider">? + ?</div>
+                        class="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-800 tracking-wider">? + ?</div>
                 </div>
 
                 <div id="p1-options" class="flex-1 grid grid-cols-1 gap-2 pb-2">
@@ -219,7 +275,7 @@
 
                 <div class="h-1/3 flex items-center justify-center mt-6">
                     <div id="p2-problem"
-                        class="text-4xl md:text-5xl lg:text-7xl font-black text-gray-800 tracking-wider">? + ?</div>
+                        class="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-800 tracking-wider">? + ?</div>
                 </div>
 
                 <div id="p2-options" class="flex-1 grid grid-cols-1 gap-2 pb-2">
@@ -231,7 +287,7 @@
 
     <!-- Start Screen -->
     <div id="start-screen" class="fixed inset-0 bg-yellow-400 flex flex-col items-center justify-center z-50">
-        <h1 class="text-6xl font-black text-white drop-shadow-md mb-8 stroke-black"
+        <h1 class="text-6xl font-bold text-white drop-shadow-md mb-8 stroke-black"
             style="-webkit-text-stroke: 2px black;">TUG OF WAR<br>BATTLE</h1>
         <button id="start-btn"
             class="bg-green-500 hover:bg-green-600 text-white text-4xl font-bold py-6 px-12 rounded-2xl border-b-8 border-green-700 active:translate-y-2 active:border-b-0 shadow-xl transition-all">
@@ -254,19 +310,33 @@
                 VICTORY!
             </div>
 
-            <h2 id="winner-text" class="text-5xl md:text-7xl font-black mb-2 mt-4 drop-shadow-md">
+            <h2 id="winner-text" class="text-5xl md:text-7xl font-bold mb-2 mt-4 drop-shadow-md">
                 BLUE WINS!
             </h2>
             <p class="text-gray-500 font-bold text-xl mb-8">The rope has been conquered!</p>
 
             <button id="restart-btn"
-                class="bg-gradient-to-b from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white text-3xl md:text-4xl font-black py-4 px-12 rounded-2xl border-b-8 border-green-800 active:border-b-0 active:translate-y-2 shadow-2xl transition-all w-full md:w-auto">
+                class="bg-gradient-to-b from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white text-3xl md:text-4xl font-bold py-4 px-12 rounded-2xl border-b-8 border-green-800 active:border-b-0 active:translate-y-2 shadow-2xl transition-all w-full md:w-auto">
                 PLAY AGAIN
             </button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
+
+
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                (function (c, l, a, r, i, t, y) {
+                    c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+                    t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+                    y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+                })(window, document, "clarity", "script", "vgja1875tr");
+
+            }, 1000);
+        });
+    </script>
 </body>
 
 </html>
