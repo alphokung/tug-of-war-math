@@ -352,20 +352,10 @@ function stopFireworks() {
     if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-let gameStarted = false;
-
-function handleStartInteraction(e) {
-    if (gameStarted) return;
-    if (e.type === 'touchstart') e.preventDefault(); // Prevent phantom clicks
-
-    gameStarted = true;
+document.getElementById('start-btn').addEventListener('click', () => {
     unlockAudio(); // Force unlock for iOS
     startCountdown();
-}
-
-const startBtn = document.getElementById('start-btn');
-startBtn.addEventListener('click', handleStartInteraction);
-startBtn.addEventListener('touchstart', handleStartInteraction, { passive: false });
+});
 
 // Audio Toggle Listener
 const audioBtn = document.getElementById('audio-btn');
@@ -456,17 +446,7 @@ function resetGame() {
     // screens.game.classList.add('hidden'); // Optional: Hide game to show start screen?
     // For now, instant restart
     screens.winner.classList.add('hidden');
-    gameStarted = false; // Reset start flag
-
-    // Instead of full restart, we go to countdown potentially?
-    // But duplicate start listeners might be an issue if we just call startCountdown.
-    // Let's reload page logic or just reset state to start.
-    // Actually, resetGame calls startCountdown directly. 
-    // We should probably allow the start button to be clickable again if we went back to start screen.
-    // But resetGame keeps us in game mode usually? 
-    // Ah, previous logic was startCountdown(). 
-
-    startCountdown();
+    startCountdown(); // Go back to countdown
 }
 
 function generateProblem(player) {
