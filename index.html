@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Math Tug-of-War Battle</title>
+
+    <!-- SEO & Open Graph -->
+    <meta name="description"
+        content="A real-time local multiplayer math battle! Pull the rope by solving math problems faster than your opponent.">
+    <meta property="og:title" content="Math Tug-of-War Battle" />
+    <meta property="og:description"
+        content="A real-time local multiplayer math battle! Pull the rope by solving math problems faster than your opponent." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/og.webp" />
+    <meta property="og:url" content="https://example.com" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'p1-blue': '#3B82F6',
+                        'p2-red': '#EF4444',
+                    },
+                    animation: {
+                        'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+                        'heave-ho': 'heaveHo 1s infinite alternate',
+                    },
+                    keyframes: {
+                        shake: {
+                            '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
+                            '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
+                            '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
+                            '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+                        },
+                        heaveHo: {
+                            '0%': { transform: 'rotate(-2deg)' },
+                            '100%': { transform: 'rotate(2deg)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100 overflow-hidden touch-none select-none">
+    <!-- Main Game Container -->
+    <div id="game-container" class="relative w-screen h-screen flex flex-col hidden">
+
+        <!-- Battle Arena (Top 50%) -->
+        <div class="flex-1 relative flex items-center justify-center overflow-hidden" id="battle-arena">
+            <!-- Stadium Background -->
+            <div class="absolute inset-0 z-0 flex flex-col">
+                <!-- Crowd / Stands -->
+                <div class="h-1/3 bg-gray-800 flex items-end justify-center overflow-hidden relative">
+                    <!-- Crowd Rows -->
+                    <div class="absolute inset-0 opacity-30"
+                        style="background-image: radial-gradient(circle, white 2px, transparent 2.5px); background-size: 10px 10px;">
+                    </div>
+                    <div class="absolute bottom-0 w-full h-8 bg-gradient-to-t from-black/50 to-transparent"></div>
+                </div>
+                <!-- Grass Field -->
+                <div class="flex-1 bg-green-600 relative overflow-hidden">
+                    <!-- Grass Stripes -->
+                    <div class="absolute inset-0 opacity-20"
+                        style="background: repeating-linear-gradient(90deg, transparent, transparent 50px, #000 50px, #000 100px);">
+                    </div>
+                    <!-- Center Line -->
+                    <div class="absolute left-1/2 top-0 bottom-0 w-2 bg-white/50 -translate-x-1/2"></div>
+                    <!-- Center Circle -->
+                    <div
+                        class="absolute left-1/2 top-1/2 w-48 h-48 border-4 border-white/30 rounded-full -translate-x-1/2 -translate-y-1/2">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Win Zones -->
+            <div
+                class="absolute left-0 top-0 bottom-0 w-1/6 bg-blue-500/20 border-r-4 border-blue-400 border-dashed flex items-center justify-center z-10">
+                <span class="text-blue-200 font-bold opacity-70 -rotate-90 text-2xl tracking-widest">GOAL</span>
+            </div>
+            <div
+                class="absolute right-0 top-0 bottom-0 w-1/6 bg-red-500/20 border-l-4 border-red-400 border-dashed flex items-center justify-center z-10">
+                <span class="text-red-200 font-bold opacity-70 rotate-90 text-2xl tracking-widest">GOAL</span>
+            </div>
+
+            <!-- Rope & Characters Container -->
+            <div id="rope-system"
+                class="relative w-full flex items-center justify-center transition-transform duration-300 ease-out z-20">
+                <!-- The Rope -->
+                <div
+                    class="absolute h-3 bg-amber-700 w-[150%] left-[-25%] rounded-full shadow-lg border-b-2 border-amber-900">
+                </div>
+                <!-- Rope Knot/Center -->
+                <div
+                    class="absolute w-10 h-10 bg-red-600 rounded-md rotate-45 border-4 border-white shadow-xl z-10 flex items-center justify-center">
+                    <div class="w-full h-1 bg-black/20"></div>
+                </div>
+
+                <!-- Player 1 Character Wrapper -->
+                <div class="absolute right-1/2 mr-24">
+                    <div id="p1-char" class="animate-heave-ho origin-bottom">
+                        <svg width="60" height="60" viewBox="0 0 100 100" class="drop-shadow-lg">
+                            <circle cx="50" cy="30" r="20" fill="#3B82F6" /> <!-- Head -->
+                            <path d="M30 50 Q50 90 70 50 L70 100 L30 100 Z" fill="#2563EB" /> <!-- Body -->
+                            <rect x="20" y="55" width="20" height="10" fill="#1D4ED8" rx="5" /> <!-- Arm L -->
+                            <rect x="60" y="55" width="20" height="10" fill="#1D4ED8" rx="5" /> <!-- Arm R -->
+                            <!-- Face (Looking Right) -->
+                            <circle cx="58" cy="25" r="3" fill="black" /> <!-- Eye -->
+                            <circle cx="60" cy="25" r="1" fill="white" /> <!-- Glint -->
+                            <path d="M55 38 Q60 42 65 38" fill="none" stroke="black" stroke-width="2"
+                                stroke-linecap="round" /> <!-- Mouth -->
+                            <!-- Bandana -->
+                            <path d="M28 20 Q50 10 72 20 L72 26 Q50 16 28 26 Z" fill="#1D4ED8" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Player 2 Character Wrapper -->
+                <div class="absolute left-1/2 ml-24 scale-x-[-1]">
+                    <div id="p2-char" class="animate-heave-ho origin-bottom">
+                        <svg width="60" height="60" viewBox="0 0 100 100" class="drop-shadow-lg">
+                            <!-- Legs -->
+                            <path d="M35 90 L35 100 M65 90 L65 100" stroke="#991B1B" stroke-width="8"
+                                stroke-linecap="round" />
+                            <!-- Body -->
+                            <path d="M30 50 Q50 90 70 50 L70 90 L30 90 Z" fill="#DC2626" />
+                            <!-- Head -->
+                            <circle cx="50" cy="30" r="22" fill="#F87171" />
+                            <!-- Face (Looking Right - mirrored to Left) -->
+                            <circle cx="58" cy="25" r="3" fill="black" /> <!-- Eye -->
+                            <circle cx="60" cy="25" r="1" fill="white" /> <!-- Glint -->
+                            <path d="M55 38 Q60 42 65 38" fill="none" stroke="black" stroke-width="2"
+                                stroke-linecap="round" /> <!-- Mouth -->
+                            <!-- Bandana -->
+                            <path d="M28 20 Q50 10 72 20 L72 26 Q50 16 28 26 Z" fill="#B91C1C" />
+
+                            <!-- Arms (Pulling) -->
+                            <rect x="50" y="55" width="25" height="12" fill="#B91C1C" rx="6"
+                                transform="rotate(-10 50 55)" />
+                            <rect x="25" y="55" width="25" height="12" fill="#B91C1C" rx="6"
+                                transform="rotate(10 25 55)" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lightning Effects Overlay -->
+            <div id="fx-layer" class="absolute inset-0 pointer-events-none overflow-hidden">
+                <!-- P1 Lightning (Left) -->
+                <div id="p1-lightning" class="absolute left-10 top-1/2 -translate-y-1/2 hidden z-20">
+                    <svg width="400" height="200" viewBox="0 0 400 200"
+                        class="drop-shadow-[0_0_15px_rgba(255,255,0,0.8)]">
+                        <path d="M0,100 L150,80 L120,120 L300,50 L250,150 L400,100" fill="none" stroke="#FEF08A"
+                            stroke-width="8" stroke-linecap="round" stroke-linejoin="round" class="animate-pulse" />
+                    </svg>
+                </div>
+                <!-- P2 Lightning (Right) -->
+                <div id="p2-lightning" class="absolute right-10 top-1/2 -translate-y-1/2 hidden z-20 scale-x-[-1]">
+                    <svg width="400" height="200" viewBox="0 0 400 200"
+                        class="drop-shadow-[0_0_15px_rgba(255,255,0,0.8)]">
+                        <path d="M0,100 L150,80 L120,120 L300,50 L250,150 L400,100" fill="none" stroke="#FEF08A"
+                            stroke-width="8" stroke-linecap="round" stroke-linejoin="round" class="animate-pulse" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Area (Bottom 50%) -->
+        <div class="flex-1 flex border-t-4 md:border-t-8 border-gray-300">
+            <!-- Player 1 Controls -->
+            <div
+                class="flex-1 bg-blue-50 flex flex-col p-2 md:p-4 border-r-2 md:border-r-4 border-gray-300 relative overflow-visible">
+                <!-- P1 Power Bar (Street Fighter Style) -->
+                <div class="absolute top-[-2rem] left-2 w-3/4 md:w-1/2 z-30">
+                    <div
+                        class="h-6 md:h-8 bg-gray-900 border-2 border-yellow-400 transform -skew-x-12 relative overflow-hidden shadow-lg">
+                        <div id="p1-power-bar"
+                            class="h-full bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-400 transition-all duration-300 ease-out w-0 relative">
+                            <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                        </div>
+                    </div>
+                    <div
+                        class="absolute top-7 left-0 text-xs font-bold text-blue-800 tracking-widest transform -skew-x-12 bg-white/80 px-2 rounded-sm border border-blue-300">
+                        P1 POWER</div>
+                </div>
+
+                <div class="h-1/3 flex items-center justify-center mt-6">
+                    <div id="p1-problem"
+                        class="text-4xl md:text-5xl lg:text-7xl font-black text-gray-800 tracking-wider">? + ?</div>
+                </div>
+
+                <div id="p1-options" class="flex-1 grid grid-cols-1 gap-2 pb-2">
+                    <!-- Buttons generated by JS -->
+                </div>
+            </div>
+
+            <!-- Player 2 Controls -->
+            <div
+                class="flex-1 bg-red-50 flex flex-col p-2 md:p-4 border-l-2 md:border-l-4 border-gray-300 relative overflow-visible">
+                <!-- P2 Power Bar (Street Fighter Style) -->
+                <div class="absolute top-[-2rem] right-2 w-3/4 md:w-1/2 z-30 flex flex-col items-end">
+                    <div
+                        class="h-6 md:h-8 w-full bg-gray-900 border-2 border-yellow-400 transform skew-x-12 relative overflow-hidden shadow-lg">
+                        <div id="p2-power-bar"
+                            class="h-full bg-gradient-to-l from-red-700 via-red-500 to-orange-400 transition-all duration-300 ease-out w-0 float-right relative">
+                            <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                        </div>
+                    </div>
+                    <div
+                        class="absolute top-7 right-0 text-xs font-bold text-red-800 tracking-widest transform skew-x-12 bg-white/80 px-2 rounded-sm border border-red-300">
+                        P2 POWER</div>
+                </div>
+
+                <div class="h-1/3 flex items-center justify-center mt-6">
+                    <div id="p2-problem"
+                        class="text-4xl md:text-5xl lg:text-7xl font-black text-gray-800 tracking-wider">? + ?</div>
+                </div>
+
+                <div id="p2-options" class="flex-1 grid grid-cols-1 gap-2 pb-2">
+                    <!-- Buttons generated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="fixed inset-0 bg-yellow-400 flex flex-col items-center justify-center z-50">
+        <h1 class="text-6xl font-black text-white drop-shadow-md mb-8 stroke-black"
+            style="-webkit-text-stroke: 2px black;">TUG OF WAR<br>BATTLE</h1>
+        <button id="start-btn"
+            class="bg-green-500 hover:bg-green-600 text-white text-4xl font-bold py-6 px-12 rounded-2xl border-b-8 border-green-700 active:translate-y-2 active:border-b-0 shadow-xl transition-all">
+            START GAME
+        </button>
+        <p class="mt-8 text-xl text-yellow-800 font-bold">2 Players • Local Multiplayer</p>
+    </div>
+
+    <!-- Winner Overlay (Dialog Style) -->
+    <div id="winner-overlay"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-opacity duration-500">
+        <!-- Fireworks Canvas -->
+        <canvas id="fireworks" class="absolute inset-0 pointer-events-none"></canvas>
+
+        <!-- Victory Dialog Card -->
+        <div id="winner-card"
+            class="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border-8 border-yellow-400 relative z-10 text-center transform scale-0 transition-transform duration-500 cubic-bezier(0.34, 1.56, 0.64, 1)">
+            <div
+                class="absolute -top-12 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 font-black text-2xl md:text-3xl px-8 py-2 rounded-full border-4 border-white shadow-lg uppercase tracking-widest whitespace-nowrap">
+                VICTORY!
+            </div>
+
+            <h2 id="winner-text" class="text-5xl md:text-7xl font-black mb-2 mt-4 drop-shadow-md">
+                BLUE WINS!
+            </h2>
+            <p class="text-gray-500 font-bold text-xl mb-8">The rope has been conquered!</p>
+
+            <button id="restart-btn"
+                class="bg-gradient-to-b from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white text-3xl md:text-4xl font-black py-4 px-12 rounded-2xl border-b-8 border-green-800 active:border-b-0 active:translate-y-2 shadow-2xl transition-all w-full md:w-auto">
+                PLAY AGAIN
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
