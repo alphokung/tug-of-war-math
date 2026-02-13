@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Tug-of-War Battle</title>
 
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
+
     <!-- SEO & Open Graph -->
     <meta name="description"
         content="A real-time local multiplayer math battle! Pull the rope by solving math problems faster than your opponent.">
@@ -172,14 +178,12 @@
             <div id="rope-system"
                 class="relative w-full flex items-center justify-center transition-transform duration-300 ease-out z-20">
                 <!-- The Rope -->
-                <div
-                    class="absolute h-3 bg-amber-700 w-[150%] left-[-25%] rounded-full shadow-lg border-b-2 border-amber-900">
+                <div class="absolute h-4 md:h-6 w-[150%] left-[-25%] shadow-lg transition-transform duration-300 ease-out"
+                    style="background-image: url('assets/rope.webp'); background-repeat: repeat-x; background-size: auto 100%;">
                 </div>
                 <!-- Rope Knot/Center -->
-                <div
-                    class="absolute w-10 h-10 bg-red-600 rounded-md rotate-45 border-4 border-white shadow-xl z-10 flex items-center justify-center">
-                    <div class="w-full h-1 bg-black/20"></div>
-                </div>
+                <img src="assets/knott.webp" alt="Rope Knot"
+                    class="absolute h-16 md:h-20 w-auto z-10 drop-shadow-md filter brightness-110">
 
                 <!-- Player 1 Character Wrapper -->
                 <div class="absolute right-1/2 mr-24">
