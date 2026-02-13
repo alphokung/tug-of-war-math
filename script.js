@@ -34,22 +34,108 @@ const winnerText = document.getElementById('winner-text');
 
 // Audio Context Setup
 let audioCtx;
+let isMuted = false;
+let bgmOscillators = [];
+let nextNoteTime = 0;
+let musicTimer = null;
+let currentNoteIndex = 0;
 
 function initAudio() {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+// 8-bit Circus Theme Melody (Entry of the Gladiators style)
+// Note frequencies (Hz) and duration (beats)
+const melody = [
+    { f: 261.63, d: 0.2 }, { f: 0, d: 0.1 }, { f: 293.66, d: 0.2 }, { f: 0, d: 0.1 }, // C4, D4
+    { f: 329.63, d: 0.2 }, { f: 0, d: 0.1 }, { f: 349.23, d: 0.2 }, { f: 0, d: 0.1 }, // E4, F4
+    { f: 392.00, d: 0.4 }, { f: 0, d: 0.1 }, { f: 392.00, d: 0.4 }, { f: 0, d: 0.1 }, // G4, G4
+    { f: 440.00, d: 0.2 }, { f: 0, d: 0.1 }, { f: 392.00, d: 0.2 }, { f: 0, d: 0.1 }, // A4, G4
+    { f: 349.23, d: 0.2 }, { f: 0, d: 0.1 }, { f: 329.63, d: 0.2 }, { f: 0, d: 0.1 }, // F4, E4
+    { f: 293.66, d: 0.4 }, { f: 0, d: 0.1 }, // D4
+];
+
+function playCircusTheme() {
+    if (isMuted || !audioCtx) return;
+
+    // Simple sequencer logic
+    function scheduleNote() {
+        if (isMuted || gameState.status !== 'playing') return;
+
+        const note = melody[currentNoteIndex % melody.length];
+        const t = audioCtx.currentTime;
+
+        if (note.f > 0) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'square'; // 8-bit sound
+            osc.frequency.setValueAtTime(note.f, t);
+
+            gain.gain.setValueAtTime(0.05, t); // Low volume background
+            gain.gain.exponentialRampToValueAtTime(0.01, t + note.d - 0.05);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(t);
+            osc.stop(t + note.d);
+
+            // Keep track to stop if needed
+            // (Simpler here: we just let them play out since they are short)
+        }
+
+        currentNoteIndex++;
+
+        // Calculate next note time
+        // We use setTimeout for simplicity in this loop, though strictly 
+        // AudioContext scheduling is more precise. customized for "circus" loose feel.
+        musicTimer = setTimeout(scheduleNote, note.d * 1000);
+    }
+
+    scheduleNote();
+}
+
+function stopMusic() {
+    if (musicTimer) clearTimeout(musicTimer);
+    // Oscillators stop themselves
+}
+
+function toggleMusic() {
+    isMuted = !isMuted;
+    const btn = document.getElementById('audio-btn');
+    const onIcon = document.getElementById('icon-sound-on');
+    const offIcon = document.getElementById('icon-sound-off');
+
+    if (isMuted) {
+        onIcon.classList.add('hidden');
+        offIcon.classList.remove('hidden');
+        stopMusic();
+    } else {
+        onIcon.classList.remove('hidden');
+        offIcon.classList.add('hidden');
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        if (gameState.status === 'playing') playCircusTheme();
+    }
 }
 
 function speak(text) {
-    if ('speechSynthesis' in window) {
+    if ('speechSynthesis' in window && !isMuted) {
+        // iOS requires canceling previous speech sometimes
+        window.speechSynthesis.cancel();
+
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 1.2; // Slightly faster
-        utterance.pitch = 1.2; // Slightly higher pitch
+        utterance.rate = 1.2;
+        utterance.pitch = 1.2;
         utterance.volume = 1.0;
         window.speechSynthesis.speak(utterance);
     }
 }
 
 function playCheer() {
+    if (isMuted || !audioCtx) return; // Respect mute
     if (!audioCtx) initAudio();
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
@@ -71,6 +157,7 @@ function playCheer() {
 }
 
 function playVictorySound() {
+    if (isMuted || !audioCtx) return; // Respect mute
     if (!audioCtx) initAudio();
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
@@ -236,9 +323,15 @@ function stopFireworks() {
 }
 
 document.getElementById('start-btn').addEventListener('click', () => {
-    initAudio();
+    unlockAudio(); // Force unlock for iOS
     startCountdown();
 });
+
+// Audio Toggle Listener
+const audioBtn = document.getElementById('audio-btn');
+if (audioBtn) {
+    audioBtn.addEventListener('click', toggleMusic);
+}
 
 const restartBtn = document.getElementById('restart-btn');
 if (restartBtn) {
@@ -305,6 +398,14 @@ function startGame() {
     screens.start.classList.add('hidden');
     screens.winner.classList.add('hidden');
     screens.game.classList.remove('hidden');
+
+    // Start Background Music
+    if (!isMuted) {
+        // audioCtx.resume() is already handled in click event, but good safety check
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        currentNoteIndex = 0; // Reset melody
+        playCircusTheme();
+    }
 
     generateProblem('p1');
     generateProblem('p2');
@@ -461,6 +562,7 @@ function checkWinCondition() {
 
 function endGame(winner) {
     gameState.status = 'end';
+    stopMusic(); // Stop Background Music
 
     // Final Visual Update to show 100%
     if (winner === 'p1') gameState.ropePosition = CONFIG.WIN_ZONE_WIDTH;
