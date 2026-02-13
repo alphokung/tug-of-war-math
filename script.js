@@ -134,6 +134,36 @@ function speak(text) {
     }
 }
 
+// iOS Polish: Function to force-unlock audio context and speech
+function unlockAudio() {
+    try {
+        initAudio();
+
+        // Safety check if AudioContext is not supported
+        if (!audioCtx) return;
+
+        // 1. Resume AudioContext
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
+        // 2. Play silent buffer to warm up iOS Audio
+        const buffer = audioCtx.createBuffer(1, 1, 22050);
+        const source = audioCtx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioCtx.destination);
+        source.start(0);
+
+        // 3. Unlock SpeechSynthesis (play silent utterance)
+        if ('speechSynthesis' in window) {
+            const u = new SpeechSynthesisUtterance("");
+            window.speechSynthesis.speak(u);
+        }
+    } catch (e) {
+        console.error("Audio unlock failed:", e);
+        // Continue game even if audio fails
+    }
+}
 function playCheer() {
     if (isMuted || !audioCtx) return; // Respect mute
     if (!audioCtx) initAudio();
