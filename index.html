@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Math Tug-of-War Battle</title>
 
     <!-- Favicon -->
@@ -95,6 +96,9 @@
             /* Use dvh/dvw if available for better mobile support */
             height: 100dvh;
             overflow: hidden;
+            box-sizing: border-box;
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
         }
 
         @media (orientation: portrait) {
@@ -110,6 +114,13 @@
                 transform: translate(-50%, -50%) rotate(90deg);
                 transform-origin: center center;
                 touch-action: none;
+                /* In rotated state: Top->Right, Right->Bottom, Bottom->Left, Left->Top */
+                /* Physical Top is Logical Left. Physical Bottom is Logical Right. */
+                padding-left: env(safe-area-inset-top);
+                padding-right: env(safe-area-inset-bottom);
+                /* Ensure left/right (physical side) padding is 0 or minimal if needed, but usually 0 */
+                padding-top: 0;
+                padding-bottom: 0;
             }
         }
     </style>
@@ -153,7 +164,7 @@
 
             <!-- Audio Control Button (Absolute Top Center of Screen) -->
             <button id="audio-btn"
-                class="fixed top-2 md:top-4 left-1/2 -translate-x-1/2 z-[999] bg-white/80 p-2 md:p-3 rounded-full shadow-lg border-2 border-yellow-500 hover:bg-yellow-100 transition-transform hover:scale-110 active:scale-95">
+                class="fixed top-2 md:top-4 left-1/2 -translate-x-1/2 z-[999] bg-white/80 p-2 md:p-3 rounded-full shadow-lg border-2 border-yellow-500 hover:bg-yellow-100 transition-transform hover:scale-110 active:scale-95 portrait:top-1/2 portrait:left-6 portrait:-translate-y-1/2 portrait:translate-x-0 portrait:-rotate-90">
                 <!-- Icon: Sound On -->
                 <svg id="icon-sound-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -175,7 +186,8 @@
             <!-- Logic: Container W is ~30%, H is 100%. Inner wrapper W is 100dvh, H is 30w. Rotated 90. -->
             <div
                 class="w-[30%] h-full bg-blue-50 border-r-4 border-yellow-500 relative flex items-center justify-center z-30">
-                <div class="absolute w-[100dvh] h-[30vw] flex flex-col p-4 transform rotate-90 origin-center">
+                <div
+                    class="absolute w-[100dvh] h-[30vw] portrait:w-[100dvw] portrait:h-[30dvh] flex flex-col p-4 transform rotate-90 origin-center">
 
                     <!-- P1 Power Bar -->
                     <div class="w-1/2 mx-auto mb-4">
@@ -314,7 +326,8 @@
             <!-- RIGHT COLUMN: PLAYER 2 CONTROLS (Rotated -90deg) -->
             <div
                 class="w-[30%] h-full bg-red-50 border-l-4 border-yellow-500 relative flex items-center justify-center z-30">
-                <div class="absolute w-[100dvh] h-[30vw] flex flex-col p-4 transform -rotate-90 origin-center">
+                <div
+                    class="absolute w-[100dvh] h-[30vw] portrait:w-[100dvw] portrait:h-[30dvh] flex flex-col p-4 transform -rotate-90 origin-center">
 
                     <!-- P2 Power Bar -->
                     <div class="w-1/2 mx-auto mb-4 scale-x-[-1]">
