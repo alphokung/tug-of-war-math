@@ -227,11 +227,19 @@ let animationId;
 
 function resizeCanvas() {
     if (canvas) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        const wrapper = document.getElementById('app-wrapper');
+        if (wrapper) {
+            canvas.width = wrapper.clientWidth;
+            canvas.height = wrapper.clientHeight;
+        } else {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
     }
 }
 window.addEventListener('resize', resizeCanvas);
+// Call resizeCanvas periodically to handle mobile browser UI changes
+setInterval(resizeCanvas, 1000);
 resizeCanvas();
 
 class Firework {
